@@ -16,6 +16,7 @@ lib/vlad/git.rb
 lib/vlad/lighttpd.rb
 lib/vlad/mercurial.rb
 lib/vlad/mongrel.rb
+lib/vlad/passenger.rb
 lib/vlad/perforce.rb
 lib/vlad/subversion.rb
 test/test_rake_remote_task.rb
