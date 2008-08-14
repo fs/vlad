@@ -95,7 +95,7 @@ namespace :vlad do
   desc "Fixes permissions on the latest release and shared directory".cleanup
   
   remote_task :fix_permissions, :roles => :app do
-    run [ chown(current_path)
+    run [ chown(current_path),
           chown(shared_path)
         ].join(" && ")
   end
