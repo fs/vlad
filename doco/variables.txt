@@ -19,7 +19,7 @@ migrate_args::         Set this to change the RAILS_ENV that 'rake db:migrate'
                        will run under. Defaults to "".
 migrate_target::       Set this if you need to specify a particular migration
                        'VERSION' number. Defaults to "latest".
-rails_env::            Specifies the RAILS_ENV environment variable that will
+environment::            Specifies the RAILS_ENV environment variable that will
                        be used. Defaults to "production".
 rake::                 Set this if you need to specify an alternate path to
                        'rake'. Defaults to "rake".

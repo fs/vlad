@@ -20,7 +20,7 @@ module Vlad
 
   ##
   # This is the version of Vlad you are running.
-  VERSION = '1.2.0'
+  VERSION = '1.2.0.1'
 
   ##
   # Base error class for all Vlad errors.
@@ -62,11 +62,11 @@ module Vlad
     order += options.keys - order
 
     recipes = {
-      :app    => :mongrel,
+      :app    => :passenger,
       :config => 'config/deploy.rb',
       :core   => :core,
-      :scm    => :subversion,
-      :web    => :apache,
+      :scm    => :git,
+      :web    => nil
     }.merge(options)
 
     order.each do |flavor|

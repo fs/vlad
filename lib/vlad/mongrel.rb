@@ -4,19 +4,19 @@ namespace :vlad do
   ##
   # Mongrel app server
 
-  set :mongrel_address,       "127.0.0.1"
-  set :mongrel_clean,         false
-  set :mongrel_command,       'mongrel_rails'
-  set(:mongrel_conf)          { "#{shared_path}/mongrel_cluster.conf" }
+  set :mongrel_address,       '127.0.0.1'
+  set :mongrel_clean,         true
+  set :mongrel_command,       'sudo mongrel_rails'
+  set(:mongrel_conf)          { "/etc/rails/mongrel_cluster/#{application}_#{environment}.conf" }
   set :mongrel_config_script, nil
-  set :mongrel_environment,   "production"
-  set :mongrel_group,         nil
+  set :mongrel_environment,   environment
+  set :mongrel_user,          app_user
+  set :mongrel_group,         app_group
   set :mongrel_log_file,      nil
   set :mongrel_pid_file,      nil
-  set :mongrel_port,          8000
+  set :mongrel_port,          environment == 'production' ? '8000' : '9000'
   set :mongrel_prefix,        nil
   set :mongrel_servers,       2
-  set :mongrel_user,          nil
 
   desc "Prepares application servers for deployment. Mongrel
 configuration is set via the mongrel_* variables.".cleanup

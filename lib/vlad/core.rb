@@ -36,12 +36,19 @@ namespace :vlad do
     Rake::Task['vlad:setup_app'].invoke
   end
 
+  def chown(path)
+    "#{sudo_cmd} chown -R #{app_user}:#{app_group} #{path}/"
+  end
+
   desc "Prepares application servers for deployment.".cleanup
 
   remote_task :setup_app, :roles => :app do
     dirs = [deploy_to, releases_path, scm_path, shared_path]
     dirs += %w(system log pids).map { |d| File.join(shared_path, d) }
-    run "umask #{umask} && mkdir -p #{dirs.join(' ')}"
+    run [ "umask #{umask}",
+          "mkdir -p #{dirs.join(' ')}",
+          chown(shared_path)
+        ].join(" && ")
   end
 
   desc "Updates your application server to the latest revision.  Syncs
@@ -56,6 +63,7 @@ namespace :vlad do
             "#{source.checkout revision, '.'}",
             "#{source.export ".", release_path}",
             "chmod -R g+w #{latest_release}",
+            chown(latest_release),
             "rm -rf #{latest_release}/log #{latest_release}/public/system #{latest_release}/tmp/pids",
             "mkdir -p #{latest_release}/db #{latest_release}/tmp",
             "ln -s #{shared_path}/log #{latest_release}/log",
@@ -75,6 +83,23 @@ namespace :vlad do
     end
   end
 
+  desc "Updates current release.".cleanup
+
+  remote_task :hot_update, :roles => :app do
+    run [ "cd #{current_path}",
+          source.update(revision),
+          chown(current_path)
+        ].join(" && ")
+  end
+  
+  desc "Fixes permissions on the latest release and shared directory".cleanup
+  
+  remote_task :fix_permissions, :roles => :app do
+    run [ chown(current_path)
+          chown(shared_path)
+        ].join(" && ")
+  end
+
   desc "Run the migrate rake task for the the app. By default this is run in
     the latest app directory.  You can run migrations for the current app
     directory by setting :migrate_target to :current.  Additional environment
@@ -91,7 +116,7 @@ namespace :vlad do
                 else raise ArgumentError, "unknown migration target #{migrate_target.inspect}"
                 end
 
-    run "cd #{current_path}; #{rake_cmd} RAILS_ENV=#{rails_env} db:migrate #{migrate_args}"
+    run "cd #{current_path}; #{rake_cmd} RAILS_ENV=#{environment} db:migrate #{migrate_args}"
   end
 
   desc "Invoke a single command on every remote server. This is useful for

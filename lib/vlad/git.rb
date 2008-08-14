@@ -13,10 +13,15 @@ class Vlad::Git
     revision = 'HEAD' if revision =~ /head/i
 
     [ "rm -rf #{destination}",
-      "#{git_cmd} clone #{repository} #{destination}",
+      "#{git_cmd} clone -q --depth 1 #{repository} #{destination}",
       "cd #{destination}",
-      "#{git_cmd} checkout -f -b deployed-#{revision} #{revision}"
+      "#{git_cmd} submodule -q init",
+      "#{git_cmd} submodule -q update"
     ].join(" && ")
+  end
+
+  def update(revision)
+    "#{git_cmd} pull -q && #{git_cmd} submodule -q update"
   end
 
   ##
@@ -24,11 +29,7 @@ class Vlad::Git
   # the directory +destination+.
 
   def export(revision, destination)
-    revision = 'HEAD' if revision == "."
-
-    [ "mkdir -p #{destination}",
-      "#{git_cmd} archive #{revision} | (cd #{destination} && tar xf -)"
-    ].join(" && ")
+    "mkdir -p #{destination} && cp -pR . #{destination}"
   end
 
   ##

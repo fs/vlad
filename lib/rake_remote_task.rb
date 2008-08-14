@@ -412,17 +412,19 @@ class Rake::RemoteTask < Rake::Task
     @@default_env ||= {}
     self.reset
 
-    mandatory :repository, "repository path"
-    mandatory :deploy_to,  "deploy path"
-    mandatory :domain,     "server domain"
+    mandatory :repository,  "repository path"
+    mandatory :deploy_to,   "deploy path"
+    mandatory :domain,      "server domain"
 
     simple_set(:deploy_timestamped, true,
                :deploy_via,         :export,
-               :keep_releases,      5,
+               :keep_releases,      3,
                :migrate_args,       "",
                :migrate_target,     :latest,
-               :rails_env,          "production",
-               :rake_cmd,           "rake",
+               :environment,        ENV['ENV'] ? ENV['ENV'] : 'production',
+               :app_user,           'rails',
+               :app_group,          'rails',
+               :rake_cmd,           'sudo -u rails rake',
                :revision,           "head",
                :rsync_cmd,          "rsync",
                :rsync_flags,        ['-azP', '--delete'],

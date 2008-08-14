@@ -5,7 +5,7 @@ require 'hoe'
 $: << 'lib'
 require 'vlad'
 
-Hoe.new('vlad', Vlad::VERSION) do |vlad|
+Hoe.new('fs_vlad', Vlad::VERSION) do |vlad|
   vlad.rubyforge_name = 'hitsquad'
 
   vlad.developer('Ryan Davis', 'ryand-ruby@zenspider.com')
