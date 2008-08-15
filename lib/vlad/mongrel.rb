@@ -14,7 +14,7 @@ namespace :vlad do
   set :mongrel_group,         app_group
   set :mongrel_log_file,      nil
   set :mongrel_pid_file,      nil
-  set :mongrel_port,          environment == 'production' ? '8000' : '9000'
+  set :mongrel_port,          app_port
   set :mongrel_prefix,        nil
   set :mongrel_servers,       2
 

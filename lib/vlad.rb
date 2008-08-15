@@ -20,7 +20,7 @@ module Vlad
 
   ##
   # This is the version of Vlad you are running.
-  VERSION = '1.2.0.1'
+  VERSION = '1.2.0.2'
 
   ##
   # Base error class for all Vlad errors.
@@ -66,7 +66,7 @@ module Vlad
       :config => 'config/deploy.rb',
       :core   => :core,
       :scm    => :git,
-      :web    => nil
+      :web    => :nginx
     }.merge(options)
 
     order.each do |flavor|

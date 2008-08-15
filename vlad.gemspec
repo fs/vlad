@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = %q{fs_vlad}
-  s.version = "1.2.0.1"
+  s.version = "1.2.0.2"
 
   s.specification_version = 2 if s.respond_to? :specification_version=
 
@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = %q{Vlad the Deployer is pragmatic application deployment automation, without mercy. Much like Capistrano, but with 1/10th the complexity. Vlad integrates seamlessly with Rake, and uses familiar and standard tools like ssh and rsync.  Impale your application on the heartless spike of the Deployer.}
   s.email = ["ryand-ruby@zenspider.com", "drbrain@segment7.net", "wilson@supremetyrant.com"]
   s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.txt", "considerations.txt", "doco/faq.txt", "doco/getting_started.txt", "doco/migration.txt", "doco/perforce.txt", "doco/variables.txt"]
-  s.files = ["History.txt", "Manifest.txt", "README.txt", "Rakefile", "considerations.txt", "doco/faq.txt", "doco/getting_started.txt", "doco/migration.txt", "doco/perforce.txt", "doco/variables.txt", "lib/rake_remote_task.rb", "lib/vlad.rb", "lib/vlad/apache.rb", "lib/vlad/core.rb", "lib/vlad/git.rb", "lib/vlad/lighttpd.rb", "lib/vlad/mercurial.rb", "lib/vlad/mongrel.rb", "lib/vlad/passenger.rb", "lib/vlad/perforce.rb", "lib/vlad/subversion.rb", "test/test_rake_remote_task.rb", "test/test_vlad.rb", "test/test_vlad_git.rb", "test/test_vlad_mercurial.rb", "test/test_vlad_perforce.rb", "test/test_vlad_subversion.rb", "test/vlad_test_case.rb", "vladdemo.sh"]
+  s.files = ["History.txt", "Manifest.txt", "README.txt", "Rakefile", "considerations.txt", "doco/faq.txt", "doco/getting_started.txt", "doco/migration.txt", "doco/perforce.txt", "doco/variables.txt", "lib/rake_remote_task.rb", "lib/vlad.rb", "lib/vlad/apache.rb", "lib/vlad/core.rb", "lib/vlad/git.rb", "lib/vlad/lighttpd.rb", "lib/vlad/mercurial.rb", "lib/vlad/mongrel.rb", "lib/vlad/passenger.rb", "lib/vlad/nginx.rb", "lib/vlad/perforce.rb", "lib/vlad/subversion.rb", "test/test_rake_remote_task.rb", "test/test_vlad.rb", "test/test_vlad_git.rb", "test/test_vlad_mercurial.rb", "test/test_vlad_perforce.rb", "test/test_vlad_subversion.rb", "test/vlad_test_case.rb", "vladdemo.sh"]
   s.has_rdoc = true
   s.homepage = %q{Vlad the Deployer is pragmatic application deployment automation,}
   s.rdoc_options = ["--main", "README.txt"]
