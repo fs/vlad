@@ -9,12 +9,12 @@ namespace :vlad do
   set :mongrel_command,       'sudo mongrel_rails'
   set(:mongrel_conf)          { "/etc/rails/mongrel_cluster/#{application}_#{environment}.conf" }
   set :mongrel_config_script, nil
-  set :mongrel_environment,   environment
-  set :mongrel_user,          app_user
-  set :mongrel_group,         app_group
+  set(:mongrel_environment)   { environment }
+  set(:mongrel_user)          { app_user }
+  set(:mongrel_group)         { app_group }
   set :mongrel_log_file,      nil
   set :mongrel_pid_file,      nil
-  set :mongrel_port,          app_port
+  set(:mongrel_port)          { app_port }
   set :mongrel_prefix,        nil
   set :mongrel_servers,       2
 
