@@ -75,7 +75,7 @@ module Vlad
       require "vlad/#{recipe}"
     end
 
-    Kernel.load recipes[:config]
+    Kernel.load recipes[:config] if File.exists?(recipes[:config])
     Kernel.load "config/deploy_#{ENV['to']}.rb" if ENV['to']
   end
 end
