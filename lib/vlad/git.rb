@@ -21,7 +21,7 @@ class Vlad::Git
   end
 
   def update(revision)
-    "#{git_cmd} pull -q && #{git_cmd} submodule -q update"
+    "#{git_cmd} pull -q && #{git_cmd} submodule -q init && #{git_cmd} submodule -q update"
   end
 
   ##
