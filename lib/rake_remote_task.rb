@@ -426,6 +426,8 @@ class Rake::RemoteTask < Rake::Task
                :app_user,           'rails',
                :app_group,          'rails',
                :app_port,           '8080',
+               :app_servers,        1,
+               :only_www,           true,
                :rake_cmd,           'sudo -u rails rake',
                :revision,           "head",
                :rsync_cmd,          "rsync",

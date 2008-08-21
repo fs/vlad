@@ -16,7 +16,7 @@ namespace :vlad do
   set :mongrel_pid_file,      nil
   set(:mongrel_port)          { app_port }
   set :mongrel_prefix,        nil
-  set :mongrel_servers,       2
+  set :mongrel_servers,       { app_servers }
 
   desc "Prepares application servers for deployment. Mongrel
 configuration is set via the mongrel_* variables.".cleanup
