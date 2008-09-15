@@ -89,8 +89,7 @@ namespace :vlad do
     run [ "cd #{current_path}",
           source.update(revision),
           chown(current_path),
-          "rm -rf #{current_path}/public/javascripts/cached",
-          "rm -rf #{current_path}/public/stylesheets/cached"
+          "rm -rf #{current_release}/public/javascripts/cached #{current_release}/public/stylesheets/cached"
         ].join(" && ")
   end
 
