@@ -88,10 +88,12 @@ namespace :vlad do
   remote_task :hot_update, :roles => :app do
     run [ "cd #{current_path}",
           source.update(revision),
-          chown(current_path)
+          chown(current_path),
+          "rm -rf #{current_path}/public/javascripts/cached",
+          "rm -rf #{current_path}/public/stylesheets/cached"
         ].join(" && ")
   end
-  
+
   desc "Fixes permissions on the latest release and shared directory".cleanup
   
   remote_task :fix_permissions, :roles => :app do
