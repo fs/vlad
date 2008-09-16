@@ -1,6 +1,7 @@
 
 == Core Variables
 
+application::          application name
 repository::           REQUIRED: Repository path: e.g. http://repo.example.com/svn
 deploy_to::            REQUIRED: Deploy path on target machines. e.g. /var/www/app
 domain::               REQUIRED: Used for the common case of a single target
@@ -19,7 +20,7 @@ migrate_args::         Set this to change the RAILS_ENV that 'rake db:migrate'
                        will run under. Defaults to "".
 migrate_target::       Set this if you need to specify a particular migration
                        'VERSION' number. Defaults to "latest".
-environment::            Specifies the RAILS_ENV environment variable that will
+environment::          Specifies the RAILS_ENV environment variable that will
                        be used. Defaults to "production".
 rake::                 Set this if you need to specify an alternate path to
                        'rake'. Defaults to "rake".

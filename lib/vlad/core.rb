@@ -69,6 +69,7 @@ namespace :vlad do
             "ln -s #{shared_path}/log #{latest_release}/log",
             "ln -s #{shared_path}/system #{latest_release}/public/system",
             "ln -s #{shared_path}/pids #{latest_release}/tmp/pids",
+            "sudo cp -f  #{current_release}/config/cron/#{environment}.cron /etc/cron.d/#{application}_#{environment}.cron"
           ].join(" && ")
 
       symlink = true
@@ -89,7 +90,8 @@ namespace :vlad do
     run [ "cd #{current_path}",
           source.update(revision),
           chown(current_path),
-          "rm -rf #{current_release}/public/javascripts/cached #{current_release}/public/stylesheets/cached"
+          "rm -rf #{current_release}/public/javascripts/cached #{current_release}/public/stylesheets/cached",
+          "sudo cp -f  #{current_release}/config/cron/#{environment}.cron /etc/cron.d/#{application}_#{environment}.cron"
         ].join(" && ")
   end
 
