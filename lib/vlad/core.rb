@@ -68,9 +68,13 @@ namespace :vlad do
             "mkdir -p #{latest_release}/db #{latest_release}/tmp",
             "ln -s #{shared_path}/log #{latest_release}/log",
             "ln -s #{shared_path}/system #{latest_release}/public/system",
-            "ln -s #{shared_path}/pids #{latest_release}/tmp/pids",
-            "sudo cp -f  #{current_release}/config/cron/#{environment}.cron /etc/cron.d/#{application}_#{environment}.cron"
+            "ln -s #{shared_path}/pids #{latest_release}/tmp/pids"
           ].join(" && ")
+
+      run  "if [ -f #{current_release}/config/cron/#{environment}.cron ]
+            then
+            sudo cp -f #{current_release}/config/cron/#{environment}.cron /etc/cron.d/#{application}_#{environment}.cron
+            fi"
 
       symlink = true
       run "rm -f #{current_path} && ln -s #{latest_release} #{current_path}"
@@ -90,9 +94,13 @@ namespace :vlad do
     run [ "cd #{current_path}",
           source.update(revision),
           chown(current_path),
-          "rm -rf #{current_release}/public/javascripts/cached #{current_release}/public/stylesheets/cached",
-          "sudo cp -f  #{current_release}/config/cron/#{environment}.cron /etc/cron.d/#{application}_#{environment}.cron"
+          "sudo -u #{app_user} rm -rf #{current_release}/public/javascripts/cached #{current_release}/public/stylesheets/cached"
         ].join(" && ")
+
+    run  "if [ -f #{current_release}/config/cron/#{environment}.cron ]
+          then
+          sudo cp -f #{current_release}/config/cron/#{environment}.cron /etc/cron.d/#{application}_#{environment}.cron
+          fi"
   end
 
   desc "Fixes permissions on the latest release and shared directory".cleanup
