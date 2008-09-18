@@ -40,6 +40,10 @@ namespace :vlad do
     "#{sudo_cmd} chown -R #{app_user}:#{app_group} #{path}/"
   end
 
+  def copy_cron
+    "test -f #{current_release}/config/cron/#{environment}.cron && sudo cp -f #{current_release}/config/cron/#{environment}.cron /etc/cron.d/#{application}_#{environment}.cron || true"
+  end
+
   desc "Prepares application servers for deployment.".cleanup
 
   remote_task :setup_app, :roles => :app do
@@ -59,7 +63,7 @@ namespace :vlad do
   remote_task :update, :roles => :app do
     symlink = false
     begin
-      run [ "cd #{scm_path}",
+      cmd = ["cd #{scm_path}",
             "#{source.checkout revision, '.'}",
             "#{source.export ".", release_path}",
             "chmod -R g+w #{latest_release}",
@@ -70,19 +74,16 @@ namespace :vlad do
             "ln -s #{shared_path}/system #{latest_release}/public/system",
             "ln -s #{shared_path}/pids #{latest_release}/tmp/pids"
           ].join(" && ")
+      cmd << '; '
+      cmd << copy_cron
 
-      run  "if [ -f #{current_release}/config/cron/#{environment}.cron ]
-            then
-            sudo cp -f #{current_release}/config/cron/#{environment}.cron /etc/cron.d/#{application}_#{environment}.cron
-            fi"
+      run(cmd)
 
       symlink = true
       run "rm -f #{current_path} && ln -s #{latest_release} #{current_path}"
-
       run "echo #{now} $USER #{revision} #{File.basename release_path} >> #{deploy_to}/revisions.log"
     rescue => e
-      run "rm -f #{current_path} && ln -s #{previous_release} #{current_path}" if
-        symlink
+      run "rm -f #{current_path} && ln -s #{previous_release} #{current_path}" if symlink
       run "rm -rf #{release_path}"
       raise e
     end
@@ -91,16 +92,15 @@ namespace :vlad do
   desc "Updates current release.".cleanup
 
   remote_task :hot_update, :roles => :app do
-    run [ "cd #{current_path}",
+    cmd = [ "cd #{current_path}",
           source.update(revision),
           chown(current_path),
           "sudo -u #{app_user} rm -rf #{current_release}/public/javascripts/cached #{current_release}/public/stylesheets/cached"
         ].join(" && ")
+    cmd << '; '
+    cmd << copy_cron
 
-    run  "if [ -f #{current_release}/config/cron/#{environment}.cron ]
-          then
-          sudo cp -f #{current_release}/config/cron/#{environment}.cron /etc/cron.d/#{application}_#{environment}.cron
-          fi"
+    run(cmd)
   end
 
   desc "Fixes permissions on the latest release and shared directory".cleanup
