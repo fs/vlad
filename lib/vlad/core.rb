@@ -39,9 +39,22 @@ namespace :vlad do
   def chown(path)
     "#{sudo_cmd} chown -R #{app_user}:#{app_group} #{path}/"
   end
-
-  def copy_cron
-    "test -f #{current_release}/config/cron/#{environment}.cron && sudo cp -f #{current_release}/config/cron/#{environment}.cron /etc/cron.d/#{application}_#{environment}.cron || true"
+  
+  def clear_asset_cache
+    dirs = [ "#{current_release}/public/javascripts/cached",
+             "#{current_release}/public/stylesheets/cached"
+           ].join(" ")
+    "sudo -u #{app_user} rm -rf #{dirs}"
+  end
+  
+  def install_crontab
+    cron_file = "/etc/cron.d/#{application}_#{environment}.cron"
+    run [ "sudo cp #{current_release}/config/cron/#{environment}.cron #{cron_file}",
+          "sudo chown root:root #{cron_file}",
+          "sudo chmod 0600 #{cron_file}"
+        ].join(" && ")
+  rescue => e
+    puts "No cron file."
   end
 
   desc "Prepares application servers for deployment.".cleanup
@@ -63,7 +76,7 @@ namespace :vlad do
   remote_task :update, :roles => :app do
     symlink = false
     begin
-      cmd = ["cd #{scm_path}",
+      run ["cd #{scm_path}",
             "#{source.checkout revision, '.'}",
             "#{source.export ".", release_path}",
             "chmod -R g+w #{latest_release}",
@@ -72,13 +85,11 @@ namespace :vlad do
             "mkdir -p #{latest_release}/db #{latest_release}/tmp",
             "ln -s #{shared_path}/log #{latest_release}/log",
             "ln -s #{shared_path}/system #{latest_release}/public/system",
-            "ln -s #{shared_path}/pids #{latest_release}/tmp/pids"
+            "ln -s #{shared_path}/pids #{latest_release}/tmp/pids",
           ].join(" && ")
-      cmd << '; '
-      cmd << copy_cron
-
-      run(cmd)
-
+      
+      install_crontab
+      
       symlink = true
       run "rm -f #{current_path} && ln -s #{latest_release} #{current_path}"
       run "echo #{now} $USER #{revision} #{File.basename release_path} >> #{deploy_to}/revisions.log"
@@ -92,15 +103,13 @@ namespace :vlad do
   desc "Updates current release.".cleanup
 
   remote_task :hot_update, :roles => :app do
-    cmd = [ "cd #{current_path}",
+    run [ "cd #{current_path}",
           source.update(revision),
           chown(current_path),
-          "sudo -u #{app_user} rm -rf #{current_release}/public/javascripts/cached #{current_release}/public/stylesheets/cached"
+          clear_asset_cache
         ].join(" && ")
-    cmd << '; '
-    cmd << copy_cron
-
-    run(cmd)
+        
+    install_crontab
   end
 
   desc "Fixes permissions on the latest release and shared directory".cleanup
