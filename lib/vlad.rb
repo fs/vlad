@@ -76,7 +76,11 @@ module Vlad
     end
 
     Kernel.load recipes[:config] if File.exists?(recipes[:config])
-    Kernel.load "config/deploy_#{ENV['to']}.rb" if ENV['to']
+    [ "config/deploy_#{ENV['to']}.rb",
+      "config/deploy/#{ENV['to']}.rb"
+    ].each do |config_file|
+      Kernel.load(config_file) if File.exists?(config_file)
+    end
   end
 end
 

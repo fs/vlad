@@ -4,7 +4,7 @@ namespace :vlad do
   set :app_command, "/etc/init.d/httpd"
 
   remote_task :setup_app, :roles => :web do
-    run %Q(sudo sh -c "ruby /etc/sliceconfig/install/interactive/passenger_config.rb '#{app_domain}' '#{application}' '#{environment}' '#{app_port}' '#{only_www}' > /etc/httpd/conf.d/vhosts/#{application}_#{environment}.conf")
+    run %Q(sudo sh -c "ruby /etc/sliceconfig/install/interactive/passenger_config.rb '#{app_domain}' '#{application}' '#{environment}' '#{app_port}' #{only_www ? 1 : 0} > /etc/httpd/conf.d/vhosts/#{application}_#{environment}.conf")
   end
 
   desc 'Restart Passenger'
