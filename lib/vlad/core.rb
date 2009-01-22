@@ -49,12 +49,13 @@ namespace :vlad do
   
   def install_crontab
     cron_file = "/etc/cron.d/#{application}_#{environment}.cron"
-    run [ "sudo cp #{current_release}/config/cron/#{environment}.cron #{cron_file}",
+    app_cron_file = "#{current_release}/config/cron/#{environment}.cron"
+    run [ "test -f #{app_cron_file}",
+          "sudo cp #{app_cron_file} #{cron_file}",
           "sudo chown root:root #{cron_file}",
           "sudo chmod 0600 #{cron_file}"
         ].join(" && ")
   rescue => e
-    puts "No cron file."
   end
 
   desc "Prepares application servers for deployment.".cleanup
